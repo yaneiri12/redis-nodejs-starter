@@ -1,6 +1,6 @@
 import getClient from "./client";
 
-export interface Session {
+export interface Session extends Record<string, any> {
   id: string;
   data: Record<string, any>;
 }
@@ -21,7 +21,7 @@ export async function getSession(id: string): Promise<Session> {
       data: {},
     };
 
-    await redis.json.set(key, "$", data as any);
+    await redis.json.set(key, "$", data);
   }
 
   // Refresh the session so it doesn't expire
@@ -34,6 +34,6 @@ export async function saveSession(session: Session): Promise<void> {
   const redis = await getClient();
   const key = sessionConfig.prefix + session.id;
 
-  await redis.json.set(key, "$", session as any);
+  await redis.json.set(key, "$", session);
   await redis.expire(key, sessionConfig.ttl);
 }
