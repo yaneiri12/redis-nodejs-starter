@@ -11,7 +11,7 @@ interface TransportInfo {
   [SPLAT]: [any];
 }
 
-const stream = process.env.LOG_STREAM ?? "LOG_STREAM";
+const stream = process.env.LOG_STREAM ?? "logs";
 
 export default class RedisTransport extends Transport {
   log(info: TransportInfo, callback: () => void) {
