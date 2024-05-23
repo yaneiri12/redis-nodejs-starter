@@ -1,42 +1,12 @@
 "use server";
 
-import { decrypt, getSessionCookie } from "@/lib/session";
-import { visited } from "@/lib/redis/session";
-import { loadProducts } from "./actions";
+import { appendOrdinalSuffix } from "@/ui/converters";
+import { getVisits, loadProducts } from "./actions";
 
 async function getData() {
-  const sessionCookie = getSessionCookie();
-
-  if (!sessionCookie) {
-    return {
-      visits: 1,
-    };
-  }
-
-  const { id } = await decrypt(sessionCookie);
-  const visits = await visited(id);
-
   return {
-    visits,
+    visits: await getVisits(),
   };
-}
-
-function ordinalSuffix(i: number): string {
-  const j = i % 10;
-  const k = i % 100;
-  let withSuffix = "";
-
-  if (j === 1 && k !== 11) {
-    withSuffix = `${i}st`;
-  } else if (j === 2 && k !== 12) {
-    withSuffix = `${i}nd`;
-  } else if (j === 3 && k !== 13) {
-    withSuffix = `${i}rd`;
-  } else {
-    withSuffix = `${i}th`;
-  }
-
-  return withSuffix;
 }
 
 export default async function Home() {
@@ -47,7 +17,7 @@ export default async function Home() {
       <section className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           This is your&nbsp;
-          <code className="font-bold">{ordinalSuffix(visits)}&nbsp;</code>
+          <code className="font-bold">{appendOrdinalSuffix(visits)}&nbsp;</code>
           visit.&nbsp;
           <a
             href="https://redis.io/learn/develop/node/nodecrashcourse/sessionstorage?utm_source=redis-node-starter&utm_campaign=redis-node-starter"
