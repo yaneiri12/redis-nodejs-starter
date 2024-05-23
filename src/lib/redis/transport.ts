@@ -1,5 +1,4 @@
 import { LEVEL, type MESSAGE, SPLAT } from "triple-beam";
-import winston from "winston";
 import Transport from "winston-transport";
 import getClient from "./client";
 
