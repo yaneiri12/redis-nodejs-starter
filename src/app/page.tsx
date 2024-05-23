@@ -3,6 +3,7 @@
 import { decrypt } from "@/lib/session";
 import { getSession, saveSession } from "@/lib/redis/session";
 import { cookies } from "next/headers";
+import { loadProducts } from "./actions";
 
 async function getData() {
   const sessionCookie = cookies().get("session")?.value;
@@ -152,6 +153,12 @@ export default async function Home() {
           </p>
         </a>
       </section>
+
+      <form action={loadProducts}>
+        <button className="inline-flex items-center justify-center gap-2 text-center transition-colors w-full h-11 whitespace-nowrap font-normal font-mono bg-[#DCFF1E] text-[#091A23] rounded-[5px] border border-[#5C707A] px-8 py-[14px] text-sm active:bg-[#163341] active:text-white sm:w-fit">
+          Load products
+        </button>
+      </form>
 
       <section className="py-12 contain-layout">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-16">
