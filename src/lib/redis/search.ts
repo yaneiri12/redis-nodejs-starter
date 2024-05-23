@@ -55,13 +55,13 @@ function parseCommand(command: string): string[] {
 
 export async function loadProducts() {
   const redis = await getClient();
-  const loaded = await redis.get("search_products_loaded");
+  const loaded = await redis.sIsMember("sampleData", "search_products");
 
   log.debug("Loading products", {
     location: "@/lib/redis/search/loadProducts",
   });
 
-  if (!!Number(loaded)) {
+  if (loaded) {
     log.debug("Products already loaded", {
       location: "@/lib/redis/search/loadProducts",
     });
@@ -90,5 +90,10 @@ export async function loadProducts() {
         await redis.sendCommand(parseCommand(command));
       }
     }
+
+    log.debug("Products loaded", {
+      location: "@/lib/redis/search/loadProducts",
+    });
+    await redis.sAdd("sampleData", "search_products");
   }
 }
