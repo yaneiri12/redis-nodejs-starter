@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
 import getClient from "./client";
+import log from "../log";
 
 function parseCommand(command: string): string[] {
   const keywords = [
@@ -56,12 +57,25 @@ export async function loadProducts() {
   const redis = await getClient();
   const loaded = await redis.get("search_products_loaded");
 
+  log.debug("Loading products", {
+    location: "@/lib/redis/search/loadProducts",
+  });
+
   if (!!Number(loaded)) {
-    console.log("Products already loaded");
+    log.debug("Products already loaded", {
+      location: "@/lib/redis/search/loadProducts",
+    });
   } else {
     const filePath = path.resolve(process.cwd(), "src/data/products.redis");
     const commandStr = await fs.readFile(filePath, "utf-8");
     const commands = commandStr.split(/\r?\n/).map((c) => c.trim());
+
+    log.debug(`Running ${commands.length} commands to load products`, {
+      location: "@/lib/redis/search/loadProducts",
+      meta: {
+        count: commands.length,
+      },
+    });
 
     for (const command of commands) {
       const [cmd, key] = command

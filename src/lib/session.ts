@@ -1,5 +1,7 @@
 import * as jose from "jose";
+import setCookie from "set-cookie-parser";
 import { nanoid } from "nanoid";
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export interface Session {
@@ -62,4 +64,19 @@ export async function updateSession(request: NextRequest) {
   });
 
   return res;
+}
+
+export function getSessionCookie() {
+  const header = headers().get("set-cookie");
+  let session: string | undefined;
+
+  if (typeof header === "string") {
+    const cookie = setCookie.parse(header, {
+      decodeValues: true,
+    });
+
+    session = cookie.find((value) => value.name === "session")?.value;
+  }
+
+  return session;
 }

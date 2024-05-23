@@ -1,3 +1,4 @@
+import log from "../log";
 import getClient from "./client";
 
 export interface Session extends Record<string, any> {
@@ -10,14 +11,14 @@ const sessionConfig = {
   prefix: "session:",
 };
 
-export async function getSession(id: string): Promise<Session> {
+export async function getSession(sessionId: string): Promise<Session> {
   const redis = await getClient();
-  const key = sessionConfig.prefix + id;
+  const key = sessionConfig.prefix + sessionId;
   let data = (await redis.json.get(key)) as Session | null;
 
   if (!data) {
     data = {
-      id,
+      id: sessionId,
       data: {},
     };
 
@@ -28,6 +29,32 @@ export async function getSession(id: string): Promise<Session> {
   await redis.expire(key, sessionConfig.ttl);
 
   return data;
+}
+
+export async function visited(sessionId: string): Promise<number> {
+  const redis = await getClient();
+  const key = sessionConfig.prefix + sessionId;
+  const keys = await redis.json.objKeys(key, ".data");
+  let visits = 1;
+
+  if (Array.isArray(keys) && keys.some((k) => k === "visits")) {
+    visits = (await redis.json.numIncrBy(key, ".data.visits", 1)) as number;
+  } else if (keys === null) {
+    await getSession(sessionId);
+    await redis.json.set(key, ".data.visits", visits);
+  } else {
+    await redis.json.set(key, ".data.visits", visits);
+  }
+
+  log.info(`New visit from session: ${sessionId}`, {
+    location: "@/lib/redis/session/visited",
+    meta: {
+      sessionId,
+      visits,
+    },
+  });
+
+  return visits;
 }
 
 export async function saveSession(session: Session): Promise<void> {

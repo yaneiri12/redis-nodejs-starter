@@ -1,12 +1,11 @@
 "use server";
 
-import { decrypt } from "@/lib/session";
-import { getSession, saveSession } from "@/lib/redis/session";
-import { cookies } from "next/headers";
+import { decrypt, getSessionCookie } from "@/lib/session";
+import { visited } from "@/lib/redis/session";
 import { loadProducts } from "./actions";
 
 async function getData() {
-  const sessionCookie = cookies().get("session")?.value;
+  const sessionCookie = getSessionCookie();
 
   if (!sessionCookie) {
     return {
@@ -15,30 +14,29 @@ async function getData() {
   }
 
   const { id } = await decrypt(sessionCookie);
-  const session = await getSession(id);
-
-  const visits = (session.data.visits ?? 1) + 1;
-  session.data.visits = visits;
-  await saveSession(session);
+  const visits = await visited(id);
 
   return {
     visits,
   };
 }
 
-function ordinalSuffix(i: number) {
-  let j = i % 10,
-    k = i % 100;
+function ordinalSuffix(i: number): string {
+  const j = i % 10;
+  const k = i % 100;
+  let withSuffix = "";
+
   if (j === 1 && k !== 11) {
-    return i + "st";
+    withSuffix = `${i}st`;
+  } else if (j === 2 && k !== 12) {
+    withSuffix = `${i}nd`;
+  } else if (j === 3 && k !== 13) {
+    withSuffix = `${i}rd`;
+  } else {
+    withSuffix = `${i}th`;
   }
-  if (j === 2 && k !== 12) {
-    return i + "nd";
-  }
-  if (j === 3 && k !== 13) {
-    return i + "rd";
-  }
-  return i + "th";
+
+  return withSuffix;
 }
 
 export default async function Home() {
