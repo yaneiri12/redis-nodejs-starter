@@ -38,8 +38,8 @@ export default async function Home() {
       {/* Welcome */}
       <section className="flex w-full flex-col gap-6 pt-5 md:gap-0 font-mono">
         <div className="mb-8 px-0">
-          <h1 className="capitalize text-6xl text-center">Welcome</h1>
-          <p className="text-xl text-center">
+          <h1 className="capitalize text-6xl text-center font-sans">Welcome</h1>
+          <p className="text-xl text-center font-sans">
             Get started with Redis and Node.js in seconds
           </p>
           <p className="text-center mt-2">
@@ -59,7 +59,7 @@ export default async function Home() {
             <h2 className="capitalize text-5xl font-sans text-display-xs sm:text-display-lg">
               Try some sample data
             </h2>
-            <p className="text-xl text-center font-mono">
+            <p className="text-xl text-center font-sans">
               Click a button to load sample data, then open{" "}
               <a
                 href="https://redis.io/insight?utm_source=redis-node-starter&utm_campaign=redis-node-starter#insight-form"
@@ -92,7 +92,7 @@ export default async function Home() {
             <h2 className="capitalize text-5xl font-sans text-display-xs sm:text-display-lg">
               Learn More
             </h2>
-            <p className="text-xl text-center font-mono">
+            <p className="text-xl text-center font-sans">
               Click on the links below to learn about Redis
             </p>
 
