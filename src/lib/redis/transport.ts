@@ -22,11 +22,6 @@ export default class RedisTransport extends Transport {
       let meta = info[SPLAT][0] ?? {};
       const location = meta?.location ?? "unknown";
 
-      if (level.toLowerCase() === "info") {
-        callback();
-        return;
-      }
-
       if (typeof message !== "string") {
         message = JSON.stringify(message);
       }
