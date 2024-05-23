@@ -50,6 +50,8 @@ export default async function Home() {
       </section>
       {/* /Welcome */}
 
+      <hr className="text-[#5c707a] bg-[#5c707a] w-full" />
+
       {/* Sample Data */}
       <section className="py-12 contain-layout">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-16">
@@ -80,6 +82,8 @@ export default async function Home() {
         </div>
       </section>
       {/* /Sample Data */}
+
+      <hr className="text-[#5c707a] bg-[#5c707a] w-full" />
 
       {/* Resources */}
       <section className="py-12 contain-layout">
@@ -167,6 +171,8 @@ export default async function Home() {
         </div>
       </section>
       {/* /Resources */}
+
+      <hr className="text-[#5c707a] bg-[#5c707a] w-full" />
 
       {/* Try Free */}
       <section className="py-12 contain-layout">
