@@ -3,8 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "next dev",
-        "build": "next build",
+        "dev": "node scripts/env.js && next dev",
+        "build": "node scripts/env.js && next build",
         "start": "next start",
         "lint": "next lint"
     },
@@ -24,6 +24,7 @@
         "@types/react": "^18",
         "@types/react-dom": "^18",
         "@types/set-cookie-parser": "^2.4.7",
+        "dotenv-load": "^3.0.0",
         "eslint": "^8",
         "eslint-config-next": "14.2.3",
         "postcss": "^8",
