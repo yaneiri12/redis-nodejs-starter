@@ -1,3 +1,5 @@
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/redis-developer/redis-nodejs-starter)
+
 This is a [Redis](https://redis.io/) starter app for [Node](https://nodejs.org/) using:
 
 - [Redis Cloud](https://redis.io/try-free/)
