@@ -113,8 +113,8 @@ export default async function Home() {
           <hr className="text-[#5c707a] bg-[#5c707a] w-full max-w-7xl" />
           <section className="py-12 contain-layout">
             <div className="max-w-7xl mx-auto px-4 lg:px-8 py-16">
-              <div className="mx-auto flex w-100 flex-col items-center gap-8 text-center">
-                <h2 className="capitalize text-5xl text-display-xs sm:text-display-lg">
+              <div className="mx-auto flex w-100 flex-col items-center gap-8">
+                <h2 className="capitalize text-5xl text-display-xs sm:text-display-lg text-center">
                   Search Products
                 </h2>
                 <Products

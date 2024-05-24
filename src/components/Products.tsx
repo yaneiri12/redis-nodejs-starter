@@ -37,21 +37,17 @@ export default function Products({
           {products.map((product) => (
             <div key={product.productId} className="px-2 py-4">
               <div className="max-w-sm h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <a href="#">
-                  <Image
-                    src={product.styleImages_default_imageURL}
-                    alt={product.productDisplayName}
-                    width={1800}
-                    height={2400}
-                    className="w-250 h-auto rounded-t-lg"
-                  />
-                </a>
+                <Image
+                  src={product.styleImages_default_imageURL}
+                  alt={product.productDisplayName}
+                  width={1800}
+                  height={2400}
+                  className="w-250 h-auto rounded-t-lg"
+                />
                 <div className="p-5">
-                  <a href="#">
-                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                      {product.productDisplayName}
-                    </h5>
-                  </a>
+                  <h5 className="mb-2 text-md tracking-tight text-gray-900 dark:text-white">
+                    {product.productDisplayName}
+                  </h5>
                 </div>
               </div>
             </div>
