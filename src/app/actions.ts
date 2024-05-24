@@ -1,11 +1,17 @@
 "use server";
 
 import { decrypt, getSessionCookie } from "@/lib/session";
-import { visited } from "@/lib/redis/session";
+import type { Session } from "@/lib/redis/session";
+import {
+  getSession,
+  selectedProductCategory,
+  visited,
+} from "@/lib/redis/session";
 import * as load from "@/lib/redis/load";
 import * as query from "@/lib/redis/query";
 import type { AvailableData } from "@/lib/redis/query";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 export interface Product {
   productId: string;
@@ -19,17 +25,40 @@ export async function loadProducts() {
   revalidatePath("/", "page");
 }
 
-export async function getVisits(): Promise<number> {
+export async function getSessionId(): Promise<string | undefined> {
   const sessionCookie = getSessionCookie();
 
   if (!sessionCookie) {
-    return 1;
+    return;
   }
 
   const { id } = await decrypt(sessionCookie);
-  const visits = await visited(id);
+
+  return id;
+}
+
+export async function getVisits(): Promise<number> {
+  const sessionId = await getSessionId();
+
+  if (!sessionId) {
+    return 1;
+  }
+
+  const visits = await visited(sessionId);
 
   return visits;
+}
+
+export async function getSessionData(): Promise<Session["data"]> {
+  const sessionId = await getSessionId();
+
+  if (!sessionId) {
+    return {};
+  }
+
+  const session = await getSession(sessionId);
+
+  return session.data;
 }
 
 export async function getAvailableData(): Promise<AvailableData> {
@@ -41,11 +70,9 @@ export async function getProductCategories() {
 }
 
 export async function getProductsByCategory(
-  formData: FormData
-): Promise<any[]> {
-  const result = await query.getProductsByCategory(
-    formData.get("category") as string
-  );
+  category: string
+): Promise<Product[]> {
+  const result = await query.getProductsByCategory(category);
 
   let products: any[] = [];
 
@@ -54,4 +81,20 @@ export async function getProductsByCategory(
   }
 
   return JSON.parse(JSON.stringify(products));
+}
+
+export async function getProductsByCategoryFormAction(
+  formData: FormData
+): Promise<Product[]> {
+  const category = formData.get("category") as string;
+  const sessionId = (await getSessionId()) as string;
+
+  const [, products] = await Promise.all([
+    selectedProductCategory(sessionId, category),
+    getProductsByCategory(category),
+  ]);
+
+  revalidatePath("/", "page");
+
+  return products;
 }

@@ -1,4 +1,3 @@
-import { AggregateGroupByReducers, AggregateSteps } from "redis";
 import getClient from "./client";
 import {
   PRODUCTS_PREFIX,

@@ -57,6 +57,16 @@ export async function visited(sessionId: string): Promise<number> {
   return visits;
 }
 
+export async function selectedProductCategory(
+  sessionId: string,
+  category: string
+): Promise<void> {
+  const redis = await getClient();
+  const key = sessionConfig.prefix + sessionId;
+
+  await redis.json.set(key, ".data.selectedProductCategory", category);
+}
+
 export async function saveSession(session: Session): Promise<void> {
   const redis = await getClient();
   const key = sessionConfig.prefix + session.id;
