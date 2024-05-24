@@ -6,7 +6,7 @@ This is a [Redis](https://redis.io/) starter app for [Node](https://nodejs.org/)
 
 ## Getting started
 
-If you **have not** already specified the recommended secrets copy and edit the `.env.example` file:
+If you **have not** already specified the recommended secrets **copy and edit** the `.env.example` file:
 
 ```bash
 cp .env.example .env.local
