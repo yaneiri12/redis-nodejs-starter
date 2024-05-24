@@ -1,5 +1,3 @@
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/redis-developer/redis-nodejs-starter)
-
 This is a [Redis](https://redis.io/) starter app for [Node](https://nodejs.org/) using:
 
 - [Redis Cloud](https://redis.io/try-free/)
@@ -8,23 +6,19 @@ This is a [Redis](https://redis.io/) starter app for [Node](https://nodejs.org/)
 
 ## Getting started
 
-Copy and edit the `.env` file:
+If you **have not** already specified the recommended secrets copy and edit the `.env.example` file:
 
 ```bash
 cp .env.example .env.local
 ```
 
-Your `.env.local` file should contain the connection string you copied from Redis Cloud.
-
 Next, run the development server:
 
 ```bash
-npm install
-# then
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Codespaces will prompt you to open the URL in your browser.
 
 ## Learn more
 

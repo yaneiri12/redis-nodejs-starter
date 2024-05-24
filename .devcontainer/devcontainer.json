@@ -14,7 +14,16 @@
 		"vscode": {
 			"settings": {},
 			"extensions": []
-		}
+		},
+        "codespaces": {
+            "openFiles": [
+                "CODESPACE.md",
+                "src/lib/redis/client.ts",
+                "src/lib/redis/query.ts",
+                "src/lib/redis/session.ts",
+                "src/lib/redis/transport.ts"
+            ]
+        }  
 	},
 
     "secrets": {
