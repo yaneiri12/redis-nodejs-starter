@@ -1,6 +1,6 @@
+import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { spaceGrotesk, spaceMono } from "@/styles/fonts";
-import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   title: "Redis Node Starter",
@@ -14,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spaceGrotesk.variable} ${spaceMono.variable}`}>
+      <body
+        className={`${spaceGrotesk.variable} ${spaceMono.variable} font-sans`}
+      >
         {children}
       </body>
     </html>

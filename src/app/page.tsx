@@ -1,16 +1,24 @@
 "use server";
 
 import { appendOrdinalSuffix } from "@/ui/converters";
-import { getVisits, loadProducts } from "./actions";
+import {
+  getAvailableData,
+  getProductCategories,
+  getVisits,
+  loadProducts,
+} from "./actions";
+import Products from "@/components/Products";
 
 async function getData() {
   return {
     visits: await getVisits(),
+    availableData: await getAvailableData(),
+    categories: await getProductCategories(),
   };
 }
 
 export default async function Home() {
-  const { visits } = await getData();
+  const { visits, availableData, categories } = await getData();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -36,10 +44,10 @@ export default async function Home() {
       {/* /Visits */}
 
       {/* Welcome */}
-      <section className="flex w-full flex-col gap-6 pt-5 md:gap-0 font-mono">
+      <section className="flex w-full flex-col gap-6 pt-5 md:gap-0">
         <div className="mb-8 px-0">
-          <h1 className="capitalize text-6xl text-center font-sans">Welcome</h1>
-          <p className="text-xl text-center font-sans">
+          <h1 className="capitalize text-6xl text-center">Welcome</h1>
+          <p className="text-xl text-center">
             Get started with Redis and Node.js in seconds
           </p>
           <p className="text-center mt-2">
@@ -56,10 +64,10 @@ export default async function Home() {
       <section className="py-12 contain-layout">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-16">
           <div className="mx-auto flex w-100 flex-col items-center gap-8 text-center">
-            <h2 className="capitalize text-5xl font-sans text-display-xs sm:text-display-lg">
+            <h2 className="capitalize text-5xl text-display-xs sm:text-display-lg">
               Try some sample data
             </h2>
-            <p className="text-xl text-center font-sans">
+            <p className="text-xl text-center">
               Click a button to load sample data, then open{" "}
               <a
                 href="https://redis.io/insight?utm_source=redis-node-starter&utm_campaign=redis-node-starter#insight-form"
@@ -71,9 +79,12 @@ export default async function Home() {
               </a>{" "}
               to view the data
             </p>
-            <div className="grid lg:grid-cols-4">
+            <div className="grid lg:grid-cols-1">
               <form action={loadProducts} className="px-2 py-4">
-                <button className="inline-flex items-center justify-center gap-2 text-center transition-colors w-full h-11 whitespace-nowrap font-normal font-mono bg-[#DCFF1E] text-[#091A23] rounded-[5px] border border-[#5C707A] px-8 py-[14px] text-sm hover:bg-[#163341] hover:text-white sm:w-fit">
+                <button
+                  disabled={availableData.search_products}
+                  className="inline-flex items-center justify-center gap-2 text-center transition-colors w-full h-11 whitespace-nowrap font-normal font-mono bg-[#DCFF1E] text-[#091A23] rounded-[5px] border border-[#5C707A] px-8 py-[14px] text-sm hover:bg-[#163341] hover:text-white sm:w-fit disabled:bg-slate-500 disabled:text-black"
+                >
                   Load products
                 </button>
               </form>
@@ -83,16 +94,34 @@ export default async function Home() {
       </section>
       {/* /Sample Data */}
 
+      {/* Products */}
+      {availableData.search_products && (
+        <>
+          <hr className="text-[#5c707a] bg-[#5c707a] w-full max-w-7xl" />
+          <section className="py-12 contain-layout">
+            <div className="max-w-7xl mx-auto px-4 lg:px-8 py-16">
+              <div className="mx-auto flex w-100 flex-col items-center gap-8 text-center">
+                <h2 className="capitalize text-5xl text-display-xs sm:text-display-lg">
+                  Search Products
+                </h2>
+                <Products categories={categories} />
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+      {/* /Products */}
+
       <hr className="text-[#5c707a] bg-[#5c707a] w-full max-w-7xl" />
 
       {/* Resources */}
       <section className="py-12 contain-layout">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-16">
           <div className="mx-auto flex w-100 flex-col items-center gap-8 text-center">
-            <h2 className="capitalize text-5xl font-sans text-display-xs sm:text-display-lg">
+            <h2 className="capitalize text-5xl text-display-xs sm:text-display-lg">
               Learn More
             </h2>
-            <p className="text-xl text-center font-sans">
+            <p className="text-xl text-center">
               Click on the links below to learn about Redis
             </p>
 
@@ -178,10 +207,10 @@ export default async function Home() {
       <section className="py-12 contain-layout">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-16">
           <div className="mx-auto flex w-100 flex-col items-center gap-8 text-center">
-            <h2 className="capitalize text-5xl font-sans text-display-xs sm:text-display-lg text-white">
+            <h2 className="capitalize text-5xl text-display-xs sm:text-display-lg text-white">
               Build with Redis Cloud
             </h2>
-            <p className="text-[26px] font-sans text-white"></p>
+            <p className="text-[26px] text-white"></p>
             <a
               className="inline-flex items-center justify-center gap-2 text-center transition-colors w-full h-11 whitespace-nowrap font-normal font-mono bg-[#DCFF1E] text-[#091A23] rounded-[5px] border border-[#5C707A] px-8 py-[14px] text-sm hover:bg-[#163341] hover:text-white sm:w-fit"
               rel="noreferrer noopener"

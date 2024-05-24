@@ -59,6 +59,7 @@ export async function updateSession(request: NextRequest) {
     name: "session",
     value: await encrypt(parsed),
     httpOnly: true,
+    sameSite: "strict",
     path: "/",
     expires: parsed.expires,
   });

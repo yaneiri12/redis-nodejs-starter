@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs/promises";
 import getClient from "./client";
 import log from "../log";
+import { SAMPLE_DATA_KEY, SEARCH_PRODUCTS_MEMBER } from "./config";
 
 function parseCommand(command: string): string[] {
   const keywords = [
@@ -53,17 +54,17 @@ function parseCommand(command: string): string[] {
   ];
 }
 
-export async function loadProducts() {
+export async function products() {
   const redis = await getClient();
-  const loaded = await redis.sIsMember("sampleData", "search_products");
+  const loaded = await redis.sIsMember(SAMPLE_DATA_KEY, SEARCH_PRODUCTS_MEMBER);
 
   log.debug("Loading products", {
-    location: "@/lib/redis/search/loadProducts",
+    location: "@/lib/redis/load/loadProducts",
   });
 
   if (loaded) {
     log.debug("Products already loaded", {
-      location: "@/lib/redis/search/loadProducts",
+      location: "@/lib/redis/load/loadProducts",
     });
   } else {
     const filePath = path.resolve(process.cwd(), "src/data/products.redis");
@@ -71,7 +72,7 @@ export async function loadProducts() {
     const commands = commandStr.split(/\r?\n/).map((c) => c.trim());
 
     log.debug(`Running ${commands.length} commands to load products`, {
-      location: "@/lib/redis/search/loadProducts",
+      location: "@/lib/redis/load/loadProducts",
       meta: {
         count: commands.length,
       },
@@ -92,8 +93,8 @@ export async function loadProducts() {
     }
 
     log.debug("Products loaded", {
-      location: "@/lib/redis/search/loadProducts",
+      location: "@/lib/redis/load/loadProducts",
     });
-    await redis.sAdd("sampleData", "search_products");
+    await redis.sAdd(SAMPLE_DATA_KEY, SEARCH_PRODUCTS_MEMBER);
   }
 }
