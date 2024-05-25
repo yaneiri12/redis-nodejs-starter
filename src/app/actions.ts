@@ -2,16 +2,12 @@
 
 import { decrypt, getSessionCookie } from "@/lib/session";
 import type { Session } from "@/lib/redis/session";
-import {
-  getSession,
-  selectedProductCategory,
-  visited,
-} from "@/lib/redis/session";
+import type { Session as CookieSession } from "@/lib/session";
+import * as redisSession from "@/lib/redis/session";
 import * as load from "@/lib/redis/load";
 import * as query from "@/lib/redis/query";
 import type { AvailableData } from "@/lib/redis/query";
-import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export interface Product {
   productId: string;
@@ -22,43 +18,47 @@ export interface Product {
 export async function loadProducts() {
   await load.products();
 
-  revalidatePath("/", "page");
+  revalidatePath("/");
 }
 
-export async function getSessionId(): Promise<string | undefined> {
+export async function getCookieSession(): Promise<CookieSession | undefined> {
   const sessionCookie = getSessionCookie();
 
   if (!sessionCookie) {
     return;
   }
 
-  const { id } = await decrypt(sessionCookie);
-
-  return id;
+  return decrypt(sessionCookie);
 }
 
 export async function getVisits(): Promise<number> {
-  const sessionId = await getSessionId();
+  const session = await getCookieSession();
 
-  if (!sessionId) {
+  if (!session) {
     return 1;
   }
 
-  const visits = await visited(sessionId);
+  let visits = 1;
+
+  if (Date.now() - session.timestamp > 200) {
+    visits = await redisSession.getVisits(session.id);
+  } else {
+    visits = await redisSession.visited(session.id);
+  }
 
   return visits;
 }
 
 export async function getSessionData(): Promise<Session["data"]> {
-  const sessionId = await getSessionId();
+  const session = await getCookieSession();
 
-  if (!sessionId) {
+  if (!session) {
     return {};
   }
 
-  const session = await getSession(sessionId);
+  const { data } = await redisSession.getSession(session.id);
 
-  return session.data;
+  return data;
 }
 
 export async function getAvailableData(): Promise<AvailableData> {
@@ -87,9 +87,13 @@ export async function setSelectedProductCategory(
   formData: FormData
 ): Promise<void> {
   const category = formData.get("category") as string;
-  const sessionId = (await getSessionId()) as string;
+  const session = await getCookieSession();
 
-  await selectedProductCategory(sessionId, category);
+  if (!session) {
+    return;
+  }
 
-  revalidatePath("/", "page");
+  await redisSession.selectedProductCategory(session.id, category);
+
+  revalidatePath("/");
 }

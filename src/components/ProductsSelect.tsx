@@ -9,7 +9,6 @@ export default function Select({ categories, selectedCategory }: SelectProps) {
   return (
     <select
       onChange={(e) => e.currentTarget.form?.requestSubmit()}
-      defaultValue="--Select--"
       value={selectedCategory}
       id="category"
       name="category"

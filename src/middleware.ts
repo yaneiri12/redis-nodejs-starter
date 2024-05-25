@@ -2,6 +2,10 @@ import { NextRequest } from "next/server";
 import { updateSession } from "@/lib/session";
 
 export async function middleware(request: NextRequest) {
+  if (request.method !== "GET") {
+    return;
+  }
+
   return updateSession(request);
 }
 

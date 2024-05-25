@@ -1,12 +1,13 @@
 import * as jose from "jose";
 import setCookie from "set-cookie-parser";
 import { nanoid } from "nanoid";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export interface Session {
   id: string;
   expires: Date;
+  timestamp: number;
 }
 
 if (!process.env.SESSION_SECRET) {
@@ -46,12 +47,14 @@ export async function updateSession(request: NextRequest) {
     token = await encrypt({
       id: nanoid(),
       expires: new Date(Date.now() + sessionConfig.ttl * 1000),
+      timestamp: Date.now(),
     });
   }
 
   // Refresh the session so it doesn't expire
   const parsed = await decrypt(token);
   parsed.expires = new Date(Date.now() + sessionConfig.ttl * 1000);
+  parsed.timestamp = Date.now();
 
   const res = NextResponse.next();
 
@@ -68,10 +71,15 @@ export async function updateSession(request: NextRequest) {
 }
 
 export function getSessionCookie() {
-  const header = headers().get("set-cookie");
+  let sCookie = cookies().get("session");
+  const setCookieHeader = headers().get("set-cookie");
+  const cookieHeader = headers().get("cookie");
+  const header = setCookieHeader ?? cookieHeader;
   let session: string | undefined;
 
-  if (typeof header === "string") {
+  if (typeof sCookie === "string") {
+    session = sCookie;
+  } else if (typeof header === "string") {
     const cookie = setCookie.parse(header, {
       decodeValues: true,
     });

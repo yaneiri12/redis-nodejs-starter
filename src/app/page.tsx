@@ -1,37 +1,18 @@
 "use server";
 
 import { appendOrdinalSuffix } from "@/ui/converters";
-import {
-  getAvailableData,
-  getProductCategories,
-  getProductsByCategory,
-  getSessionData,
-  getVisits,
-  loadProducts,
-} from "./actions";
-import type { Product } from "./actions";
+import { getAvailableData, getVisits, loadProducts } from "./actions";
 import Products from "@/components/Products";
 
 async function getData() {
-  const session = await getSessionData();
-  let products: Product[] = [];
-
-  if (typeof session.selectedProductCategory === "string") {
-    products = await getProductsByCategory(session.selectedProductCategory);
-  }
-
   return {
     visits: await getVisits(),
     availableData: await getAvailableData(),
-    categories: await getProductCategories(),
-    session: await getSessionData(),
-    products,
   };
 }
 
 export default async function Home() {
-  const { visits, availableData, categories, session, products } =
-    await getData();
+  const { visits, availableData } = await getData();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -117,11 +98,7 @@ export default async function Home() {
                 <h2 className="capitalize text-5xl text-display-xs sm:text-display-lg text-center">
                   Search Products
                 </h2>
-                <Products
-                  products={products}
-                  categories={categories}
-                  selectedCategory={session.selectedProductCategory}
-                />
+                <Products />
               </div>
             </div>
           </section>

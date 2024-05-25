@@ -31,6 +31,21 @@ export async function getSession(sessionId: string): Promise<Session> {
   return data;
 }
 
+export async function getVisits(sessionId: string): Promise<number> {
+  const redis = await getClient();
+  const key = sessionConfig.prefix + sessionId;
+  const keys = await redis.json.objKeys(key, ".data");
+  let visits = 1;
+
+  if (Array.isArray(keys) && keys.some((k) => k === "visits")) {
+    visits = (await redis.json.get(key, {
+      path: ".data.visits",
+    })) as number;
+  }
+
+  return visits;
+}
+
 export async function visited(sessionId: string): Promise<number> {
   const redis = await getClient();
   const key = sessionConfig.prefix + sessionId;

@@ -1,19 +1,35 @@
-import { setSelectedProductCategory } from "@/app/actions";
+import {
+  getProductCategories,
+  getProductsByCategory,
+  getSessionData,
+  setSelectedProductCategory,
+} from "@/app/actions";
 import type { Product } from "@/app/actions";
 import Image from "next/image";
 import ProductsSelect from "./ProductsSelect";
 
 export interface ProductsProps {
   categories: string[];
-  selectedCategory: string | undefined;
-  products: Product[];
 }
 
-export default function Products({
-  products,
-  categories,
-  selectedCategory,
-}: ProductsProps) {
+async function getData() {
+  const session = await getSessionData();
+  let products: Product[] = [];
+
+  if (typeof session.selectedProductCategory === "string") {
+    products = await getProductsByCategory(session.selectedProductCategory);
+  }
+
+  return {
+    categories: await getProductCategories(),
+    products,
+    selectedCategory: session.selectedProductCategory,
+  };
+}
+
+export default async function Products() {
+  const { products, selectedCategory, categories } = await getData();
+
   return (
     <>
       <form className="max-w-sm mx-auto" action={setSelectedProductCategory}>
