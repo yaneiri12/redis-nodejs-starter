@@ -3,6 +3,7 @@
 import { appendOrdinalSuffix } from "@/ui/converters";
 import { getAvailableData, getVisits, loadProducts } from "./actions";
 import Products from "@/components/Products";
+import Link from "next/link";
 
 async function getData() {
   return {
@@ -63,25 +64,30 @@ export default async function Home() {
             </h2>
             <p className="text-xl text-center">
               Click a button to load sample data, then open{" "}
-              <a
+              <Link
                 href="https://redis.io/insight?utm_source=redis-node-starter&utm_campaign=redis-node-starter#insight-form"
                 className="font-bold hover:font-normal dark:hover:text-[#DCFF1E]"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Redis Insight
-              </a>{" "}
-              to view the data
+              </Link>{" "}
+              or scroll down to view the data
             </p>
             <div className="grid lg:grid-cols-1">
-              <form action={loadProducts} className="px-2 py-4">
-                <button
-                  disabled={availableData.search_products}
-                  className="inline-flex items-center justify-center gap-2 text-center transition-colors w-full h-11 whitespace-nowrap font-normal font-mono bg-[#DCFF1E] text-[#091A23] rounded-[5px] border border-[#5C707A] px-8 py-[14px] text-sm hover:bg-[#163341] hover:text-white sm:w-fit disabled:bg-slate-500 disabled:text-black"
-                >
-                  Load products
-                </button>
-              </form>
+              {availableData.search_products ? (
+                <Link href="#products" className="px-2 py-4">
+                  <button className="inline-flex items-center justify-center gap-2 text-center transition-colors w-full h-11 whitespace-nowrap font-normal font-mono bg-[#DCFF1E] text-[#091A23] rounded-[5px] border border-[#5C707A] px-8 py-[14px] text-sm hover:bg-[#163341] hover:text-white sm:w-fit disabled:bg-slate-500 disabled:text-black">
+                    Search products
+                  </button>
+                </Link>
+              ) : (
+                <form action={loadProducts} className="px-2 py-4">
+                  <button className="inline-flex items-center justify-center gap-2 text-center transition-colors w-full h-11 whitespace-nowrap font-normal font-mono bg-[#DCFF1E] text-[#091A23] rounded-[5px] border border-[#5C707A] px-8 py-[14px] text-sm hover:bg-[#163341] hover:text-white sm:w-fit disabled:bg-slate-500 disabled:text-black">
+                    Load products
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </div>
@@ -91,7 +97,10 @@ export default async function Home() {
       {/* Products */}
       {availableData.search_products && (
         <>
-          <hr className="text-[#5c707a] bg-[#5c707a] w-full max-w-7xl" />
+          <hr
+            id="products"
+            className="text-[#5c707a] bg-[#5c707a] w-full max-w-7xl"
+          />
           <section className="py-12 contain-layout">
             <div className="max-w-7xl mx-auto px-4 lg:px-8 py-16">
               <div className="mx-auto flex w-100 flex-col items-center gap-8">
@@ -120,7 +129,7 @@ export default async function Home() {
             </p>
 
             <div className="pt-10 mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left font-mono">
-              <a
+              <Link
                 href="https://redis.io/docs/latest?utm_source=redis-node-starter&utm_campaign=redis-node-starter"
                 className="hover:text-[#DCFF1E] group rounded-lg border border-transparent px-2 py-4 transition-colors hover:border-gray-300 hover:bg-[#163341] hover:dark:border-neutral-700 hover:dark:bg-[#163341]"
                 target="_blank"
@@ -135,9 +144,9 @@ export default async function Home() {
                 <p className="m-0 max-w-[30ch] text-sm opacity-50">
                   Learn about Redis products, features, and commands.
                 </p>
-              </a>
+              </Link>
 
-              <a
+              <Link
                 href="https://redis.io/learn?utm_source=redis-node-starter&utm_campaign=redis-node-starter"
                 className="hover:text-[#DCFF1E] group rounded-lg border border-transparent px-2 py-4 transition-colors hover:border-gray-300 hover:bg-[#163341] hover:dark:border-neutral-700 hover:dark:bg-[#163341]"
                 target="_blank"
@@ -152,9 +161,9 @@ export default async function Home() {
                 <p className="m-0 max-w-[30ch] text-sm opacity-50">
                   Read tutorials, quick starts, and how-to guides for Redis.
                 </p>
-              </a>
+              </Link>
 
-              <a
+              <Link
                 href="https://redis.io/demo-center?utm_source=redis-node-starter&utm_campaign=redis-node-starter"
                 className="hover:text-[#DCFF1E] group rounded-lg border border-transparent px-2 py-4 transition-colors hover:border-gray-300 hover:bg-[#163341] hover:dark:border-neutral-700 hover:dark:bg-[#163341]"
                 target="_blank"
@@ -170,9 +179,9 @@ export default async function Home() {
                   Watch short, technical videos about Redis products and
                   features.
                 </p>
-              </a>
+              </Link>
 
-              <a
+              <Link
                 href="https://redis.io/insight?utm_source=redis-node-starter&utm_campaign=redis-node-starter#insight-form"
                 className="hover:text-[#DCFF1E] group rounded-lg border border-transparent px-2 py-4 transition-colors hover:border-gray-300 hover:bg-[#163341] hover:dark:border-neutral-700 hover:dark:bg-[#163341]"
                 target="_blank"
@@ -188,7 +197,7 @@ export default async function Home() {
                   Query and visualize Redis data, perform bulk operations,
                   monitor performance, and troubleshoot performance issues.
                 </p>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
