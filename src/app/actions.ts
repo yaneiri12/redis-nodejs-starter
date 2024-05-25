@@ -83,18 +83,13 @@ export async function getProductsByCategory(
   return JSON.parse(JSON.stringify(products));
 }
 
-export async function getProductsByCategoryFormAction(
+export async function setSelectedProductCategory(
   formData: FormData
-): Promise<Product[]> {
+): Promise<void> {
   const category = formData.get("category") as string;
   const sessionId = (await getSessionId()) as string;
 
-  const [, products] = await Promise.all([
-    selectedProductCategory(sessionId, category),
-    getProductsByCategory(category),
-  ]);
+  await selectedProductCategory(sessionId, category);
 
   revalidatePath("/", "page");
-
-  return products;
 }

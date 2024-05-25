@@ -1,4 +1,4 @@
-import { getProductsByCategoryFormAction } from "@/app/actions";
+import { setSelectedProductCategory } from "@/app/actions";
 import type { Product } from "@/app/actions";
 import Image from "next/image";
 import ProductsSelect from "./ProductsSelect";
@@ -16,10 +16,7 @@ export default function Products({
 }: ProductsProps) {
   return (
     <>
-      <form
-        className="max-w-sm mx-auto"
-        action={getProductsByCategoryFormAction}
-      >
+      <form className="max-w-sm mx-auto" action={setSelectedProductCategory}>
         <label
           htmlFor="category"
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
