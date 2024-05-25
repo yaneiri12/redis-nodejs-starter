@@ -43,7 +43,7 @@ function parseCommand(command: string): string[] {
           `${a
             .replace(/\\\\\\/g, "\\\\")
             .replace(/\\"/g, '"')
-            .replace(/\\x/g, "\\\\x")}`
+            .replace(/\\x/g, "\\\\x")}`,
         );
 
         return JSON.stringify(json);

@@ -34,7 +34,7 @@ export async function decrypt(value: string): Promise<Session> {
     sessionConfig.secret,
     {
       algorithms: ["HS256"],
-    }
+    },
   );
 
   return payload;

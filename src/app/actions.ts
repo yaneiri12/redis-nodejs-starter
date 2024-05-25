@@ -70,7 +70,7 @@ export async function getProductCategories() {
 }
 
 export async function getProductsByCategory(
-  category: string
+  category: string,
 ): Promise<Product[]> {
   const result = await query.getProductsByCategory(category);
 
@@ -84,7 +84,7 @@ export async function getProductsByCategory(
 }
 
 export async function setSelectedProductCategory(
-  formData: FormData
+  formData: FormData,
 ): Promise<void> {
   const category = formData.get("category") as string;
   const session = await getCookieSession();

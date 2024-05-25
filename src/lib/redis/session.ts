@@ -74,7 +74,7 @@ export async function visited(sessionId: string): Promise<number> {
 
 export async function selectedProductCategory(
   sessionId: string,
-  category: string
+  category: string,
 ): Promise<void> {
   const redis = await getClient();
   const key = sessionConfig.prefix + sessionId;

@@ -11,14 +11,14 @@ const redisConfig = {
 let client: ReturnType<typeof createClient> | null = null;
 
 export default async function getClient(
-  options?: RedisClientOptions
+  options?: RedisClientOptions,
 ): Promise<ReturnType<typeof createClient>> {
   options = Object.assign(
     {},
     {
       url: redisConfig.url,
     },
-    options
+    options,
   );
 
   if (client && client.options?.url === options.url) {

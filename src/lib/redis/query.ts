@@ -13,7 +13,7 @@ export interface AvailableData {
 export async function getAvailableData() {
   const redis = await getClient();
   const sampleData = (await redis.sMembers(
-    SAMPLE_DATA_KEY
+    SAMPLE_DATA_KEY,
   )) as (keyof AvailableData)[];
 
   return sampleData.reduce((hash, member: keyof AvailableData) => {
@@ -48,6 +48,6 @@ export async function getProductsByCategory(category: string) {
 
   return redis.ft.search(
     productIndex,
-    `@${categoriesKey}:{${category.replace(/\s/g, "\\ ")}}`
+    `@${categoriesKey}:{${category.replace(/\s/g, "\\ ")}}`,
   );
 }
