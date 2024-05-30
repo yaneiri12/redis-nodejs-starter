@@ -5,7 +5,6 @@ import {
   setSelectedProductCategory,
 } from "@/app/actions";
 import type { Product } from "@/app/actions";
-import Image from "next/image";
 import ProductsSelect from "./ProductsSelect";
 
 export interface ProductsProps {
@@ -50,7 +49,8 @@ export default async function Products() {
           {products.map((product) => (
             <div key={product.productId} className="px-2 py-4">
               <div className="max-w-sm h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <Image
+                {/* eslint-disable-next-line */}
+                <img
                   src={product.styleImages_default_imageURL}
                   alt={product.productDisplayName}
                   width={1800}
