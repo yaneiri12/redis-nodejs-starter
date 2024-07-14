@@ -1,0 +1,17 @@
+import redis
+
+# Conectar a Redis
+r = redis.Redis(
+    host='tu_url_redis', 
+    port=6379, 
+    password='tu_clave_de_acceso'
+)
+
+# Suscribirse al canal 'test_channel'
+pubsub = r.pubsub()
+pubsub.subscribe('test_channel')
+
+# Procesar mensajes
+for message in pubsub.listen():
+    if message['type'] == 'message':
+        print(f"Mensaje recibido: {message['data'].decode('utf-8')}")
